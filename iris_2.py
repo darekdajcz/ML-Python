@@ -1,21 +1,33 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Mar  8 21:07:49 2024
 
-@author: darekdajcz
-"""
 
+                   # Ładowanie bibliotek
 import pandas as pd
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from sklearn.decomposition import PCA
+%matplotlib inline
+from sklearn.linear_model import LinearRegression
  
-iris = pd.read_csv(r"/Users/darekdajcz/Desktop/Uczenie_maszynowe_Python/Kurs ML/iris.csv",
-                   header = None, 
-                   names = ['petal length', 'petal width', 
-                            'sepal length', 'sepal width', 'species'])
-
-
-
-iris.head()
+# Ładowanie danych
+auto = pd.read_csv(r"/Users/darekdajcz/Desktop/Uczenie_maszynowe_Python/Kurs ML/auto-mpg.csv")
+auto.head()
+auto.shape
+ 
+# Przygotowanie danych
+X = auto.iloc[:, 1:-1]
+X = X.drop('horsepower', axis=1)
+y = auto.loc[:,'mpg']
+ 
+X.head()
+y.head()
+ 
+# Budowanie modelu
+lr =  LinearRegression()
+lr.fit(X.to_numpy(),y)
+lr.score(X.to_numpy(),y)
+ 
+# Korzystanie z modelu
+my_car1 = [4, 160, 190, 12, 90, 1]
+my_car2 = [4, 200, 260, 15, 83, 1]
+cars = [my_car1, my_car2]
+ 
+mpg_predict = lr.predict(cars)
+print(mpg_predict)
