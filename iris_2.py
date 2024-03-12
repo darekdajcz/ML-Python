@@ -1,5 +1,3 @@
-
-
   
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -19,11 +17,12 @@ X.head()
 y.head()
  
 lr =  LinearRegression()
-lr.fit(X.to_numpy(),y)
-lr.score(X.to_numpy(),y)
+fit = lr.fit(X.to_numpy(),y)
+score = lr.score(X.to_numpy(),y)
  
 my_car1 = [4, 160, 190, 12, 90, 1]
 my_car2 = [4, 200, 260, 15, 83, 1]
+
 cars = [my_car1, my_car2]
  
 mpg_predict = lr.predict(cars)
