@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 num_iterations = 100
 time_results_loop = []
 time_results_np = []
-"""
+
 ## np optimalization with sum
 for iteration in range(1, num_iterations+1):
     start_time = time.time()
@@ -98,7 +98,7 @@ plt.scatter(range(len(time_results_np)), time_results_loop, s=10, c='b', marker=
 plt.scatter(range(len(time_results_np)), time_results_np, s=10, c='r', marker="o", label='numpy')
 plt.legend(loc='lower right')
 plt.show()
-"""
+
 
 ## np optimalization with multiply matrix
 num_iterations = 20
@@ -140,6 +140,8 @@ for iteration in range(1, num_iterations+1):
     
     print('{} - :{}'.format(iteration, end_time - start_time))    
     time_results_np.append(end_time - start_time)
+ 
+ 
  
  
  
