@@ -8,6 +8,8 @@ Created on Wed Mar 13 00:23:26 2024
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.model_selection import train_test_split
 
 class Perceptron: 
     def __init__(self, eta=0.10, epochs=50, is_verbose = False):
@@ -17,10 +19,16 @@ class Perceptron:
         self.list_of_errors = []
         
     def predict(self, x):
+        ones = np.ones((x.shape[0], 1))
+        x_1 = np.append(x.copy(), ones, axis=1)
+        return self.__predict(x_1)
+        
+        
+    def __predict(self, x):
         ## Mnozenie macierzy np.dot
         total_stimulation_Z = np.dot(x, self.w)
-        y_pred = 1 if total_stimulation_Z > 0 else -1
-        return y_pred
+        y_pred_v = np.where(total_stimulation_Z > 0, 1, -1)
+        return y_pred_v
     
     def fit(self, X, y):
         
@@ -34,14 +42,13 @@ class Perceptron:
         for e in range(self.epochs):
             
             errors_counter = 0
-            
-            for x, y_target in zip(X_1, y):
+    
                 
-                y_pred = self.predict(x)
-                delta_w = self.eta * (y_target - y_pred) * x
-                self.w += delta_w
+            y_pred_v = self.__predict(X_1)
+            delta_w_v = self.eta * np.dot((y - y_pred_v), X_1)
+            self.w += delta_w_v
         
-                errors_counter += 1 if y_target != y_pred else 0
+            errors_counter = np.count_nonzero(y- y_pred_v)
                 
             self.list_of_errors.append(errors_counter)
             
@@ -80,15 +87,37 @@ X = np.array([
 y = np.array([1,-1,-1,1,-1,-1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, -1])
 
 perceptron = Perceptron(eta=0.1, epochs=100, is_verbose=True)
-perceptron.fit(X, y)
+perceptron.fit(X, y) #training
 print(perceptron.w)
 
 
-print(perceptron.predict(np.array([[1, 2, 3, 1]])))
-print(perceptron.predict(np.array([[2, 2, 8, 1]])))
-print(perceptron.predict(np.array([[3, 3, 3, 1]])))
+print(perceptron.predict(np.array([[1, 2, 3]])))
+print(perceptron.predict(np.array([[2, 2, 8]])))
+print(perceptron.predict(np.array([[3, 3, 3]])))
 
 %matplotlib inline
 
 plt.scatter(range(perceptron.epochs), perceptron.list_of_errors)
+
+
+
+# predict for Iris Flowers
+df = pd.read_csv(r"/Users/darekdajcz/Desktop/Uczenie_maszynowe_Python/Kurs_ML/iris_diagrams/csv_data/iris.csv",
+                   header = None)
+df
+
+df = df.iloc[:100, :].copy()
+df[4] = df[4].apply(lambda x: 1 if x == 'Iris-setosa' else -1)
+df
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+p = Perceptron(eta = 0.05, epochs=50)
+p.fit(X_train, y_train)
+
+y_pred = p.predict(X_test)
+print(list(zip(y_pred, y_test)))
+print(np.count_nonzero(y_pred - y_test))
+
 
